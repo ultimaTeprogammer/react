@@ -2,11 +2,14 @@
  * @Author: tianjingyuan 2297526156@qq.com
  * @Date: 2025-08-04 11:39:27
  * @LastEditors: tianjingyuan 2297526156@qq.com
- * @LastEditTime: 2025-08-04 11:47:16
+ * @LastEditTime: 2025-08-05 11:06:12
  * @FilePath: /react-jike/src/utils/request.ts
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
 import axios, { type AxiosInstance, type AxiosRequestConfig, type AxiosResponse } from 'axios'
+import { getTokenKey, removeToken } from './token'
+import { clearUserInfo } from '@/store/modules/base'
+import { message } from 'antd'
 
 const request: AxiosInstance = axios.create({
   baseURL: 'http://geek.itheima.net/v1_0',
@@ -18,11 +21,10 @@ const request: AxiosInstance = axios.create({
 // 请求拦截器
 request.interceptors.request.use(
   (config) => {
-    // 可以在这里添加认证 token 等
-    // const token = localStorage.getItem('token')
-    // if (token) {
-    //   config.headers.Authorization = `Bearer ${token}`
-    // }
+    const token = getTokenKey()
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`
+    }
     return config
   },
   (error) => {
@@ -39,6 +41,11 @@ request.interceptors.response.use(
   (error) => {
     // 统一错误处理
     console.error('请求错误:', error)
+    if (error.response.status === 401) {
+      removeToken()
+      message.error('登录已过期，请重新登录')
+      window.location.href = '/login'
+    }
     return Promise.reject(error)
   }
 )
