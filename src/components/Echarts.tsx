@@ -2,7 +2,7 @@
  * @Author: tianjingyuan 2297526156@qq.com
  * @Date: 2025-08-05 11:15:13
  * @LastEditors: tianjingyuan 2297526156@qq.com
- * @LastEditTime: 2025-08-05 11:17:33
+ * @LastEditTime: 2025-08-05 14:49:27
  * @FilePath: /react-jike/src/components/Echarts.tsx
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -60,7 +60,7 @@ const Chart = forwardRef<ChartRef, ChartProps>((props, ref) => {
   // 暴露给父组件的方法
   useImperativeHandle(ref, () => ({
     getInstance: () => chartInstanceRef.current ?? undefined,
-    setOption: (newOption, notMerge = false) => {
+    setOption: (newOption: echarts.EChartsOption, notMerge = false) => {
       if (chartInstanceRef.current) {
         chartInstanceRef.current.setOption(newOption, notMerge)
       }
